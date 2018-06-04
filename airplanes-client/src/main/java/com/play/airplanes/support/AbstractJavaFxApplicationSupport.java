@@ -151,6 +151,40 @@ public abstract class AbstractJavaFxApplicationSupport extends Application {
         showInitialView(savedInitialView);
     }
 
+    public static void showViewInNewWindow(Class<? extends AbstractFxmlView> window, Modality mode) {
+        AbstractFxmlView view = (AbstractFxmlView)applicationContext.getBean(window);
+        Stage newStage = new Stage();
+        Scene newScene;
+        if(view.getView().getScene() != null) {
+            newScene = view.getView().getScene();
+        } else {
+            newScene = new Scene(view.getView());
+        }
+
+        newStage.setScene(newScene);
+        newStage.initModality(mode);
+        newStage.initOwner(getStage());
+        newStage.setTitle(view.getDefaultTitle());
+        newStage.initStyle(view.getDefaultStyle());
+        newStage.showAndWait();
+    }
+
+
+    public static void changeView(Class<? extends AbstractFxmlView> window) {
+        AbstractFxmlView view = (AbstractFxmlView)applicationContext.getBean(window);
+        Scene newScene = getScene();
+        Stage newStage = getStage();
+        if(view.getView().getScene() != null) {
+            newScene = view.getView().getScene();
+        } else {
+            newScene = new Scene(view.getView());
+        }
+
+        newStage.setScene(newScene);
+        newStage.setTitle(view.getDefaultTitle());
+        newStage.show();
+    }
+
 
     /**
      * Launch application view.
