@@ -7,4 +7,5 @@ import com.play.airplanes.support.FXMLView;
 @FXMLView
 public class HelloworldView extends AbstractFxmlView {
 
+
 }

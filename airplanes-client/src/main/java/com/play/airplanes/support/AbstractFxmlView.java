@@ -2,7 +2,9 @@ package com.play.airplanes.support;
 
 import org.slf4j.*;
 import org.springframework.beans.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.*;
+import org.springframework.core.env.Environment;
 import org.springframework.util.*;
 
 import java.io.*;
@@ -66,6 +68,8 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
 
     private boolean isPrimaryStageView = false;
 
+    @Autowired
+    private Environment env;
     /**
      * Instantiates a new abstract fxml view.
      */
@@ -90,9 +94,9 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
      */
     private URL getURLResource(final FXMLView annotation) {
         if (annotation != null && !annotation.value().equals("")) {
-            return getClass().getResource(annotation.value());
+            return this.getClass().getResource(annotation.value());
         } else {
-            return getClass().getResource(getFxmlPath());
+            return this.getClass().getResource(getFxmlPath());
         }
     }
 
