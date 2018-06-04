@@ -17,21 +17,18 @@ public class WorkerRunnable implements Runnable{
     public WorkerRunnable(Socket clientSocket, UserSession userSession) {
         this.clientSocket = clientSocket;
         this.userSession = userSession;
-
-
     }
 
     public void run() {
         try (
                 BufferedReader input  = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true)
+                PrintWriter outputWriter = new PrintWriter(clientSocket.getOutputStream(), true)
             ) {
 
             String command = "";
             while ( !command.equals("EXIT")){
                 command = input.readLine();
-                callCommandListener(userSession, command);
-                output.println("Mirror - "+command);
+                callCommandListener(userSession, command, outputWriter);
             }
             clientSocket.close();
         } catch (IOException e) {
@@ -40,16 +37,35 @@ public class WorkerRunnable implements Runnable{
         }
     }
 
-    private void callCommandListener(UserSession userSession, String requestBody) {
+    /**
+     * Translate request command into HEADER and BODY eg:
+     *      0|myname
+     * translates to
+     *      Header
+     *          0 ->  {@link Command#LOGIN }
+     *      Body
+     *          user name
+     *
+     *
+     * @param userSession
+     * @param requestBody
+     */
+    private void callCommandListener(UserSession userSession, String requestBody, PrintWriter outputStreamWriter) {
         if (requestBody.isEmpty())
             return;
-        logger.info("NEW REQUEST -> Client: {} | Request: {}", userSession.getSessionId(), requestBody);
+        logger.info("REQUEST->Client: {}|Request: {}", userSession.getSessionId(), requestBody);
 
-        switch (requestBody){
-            case "LOGIN":
+        Command command = Command.instanceOf(Long.valueOf(requestBody.substring(0,1)));
+
+        switch (command){
+            case LOGIN:
                 break;
-            case "CHALLENGE":
+            case LOGOUT:
                 break;
+            default:
+                outputStreamWriter.println("WRONG COMMAND");
+                break;
+
         }
     }
 
