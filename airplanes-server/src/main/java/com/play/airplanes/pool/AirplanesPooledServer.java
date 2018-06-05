@@ -1,5 +1,8 @@
 package com.play.airplanes.pool;
 
+import com.play.airplanes.domain.UserSession;
+import com.play.airplanes.service.AirplanesGameService;
+import com.play.airplanes.service.LoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +23,9 @@ public class AirplanesPooledServer {
 
     private static final Logger logger = LoggerFactory.getLogger(AirplanesPooledServer.class);
 
+    private AirplanesGameService airplanesGameService;
+    private LoginService loginService;
+
     @Value("${airplanes.server.port}")
     protected int          serverPort;
     protected ServerSocket serverSocket = null;
@@ -32,6 +38,9 @@ public class AirplanesPooledServer {
     public void run(){
         synchronized(this){
             this.runningThread = Thread.currentThread();
+            //create services
+            this.airplanesGameService = new AirplanesGameService();
+            this.loginService = new LoginService(this.airplanesGameService);
         }
         logger.info("Airplanes Server Socket: STARTING");
         openServerSocket();
@@ -54,7 +63,10 @@ public class AirplanesPooledServer {
             try {
                 this.threadPool.execute(
                         new WorkerRunnable(clientSocket,
-                                new UserSession(getClientUniqueId()))
+                                new UserSession(getClientUniqueId()),
+                                loginService,
+                                airplanesGameService
+                        )
                 );
             }
             catch (Exception e){

@@ -1,4 +1,4 @@
-package com.play.airplanes.pool;
+package com.play.airplanes.domain;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -8,10 +8,8 @@ public enum Command {
 
     LOGIN(0L),
     LOGOUT(1L),
-    CHALLENGE(2L),
-    SETUP_PLANE(3L),
-    SETUP_COMPLETE(4L),
-    HIT(8L);
+    GET_PLAYERS_SUBSCRIPTION(2L),
+    START_GAME(3L);
 
     private Long value;
     private static final Map<Long,Command> lookup = new HashMap<>();

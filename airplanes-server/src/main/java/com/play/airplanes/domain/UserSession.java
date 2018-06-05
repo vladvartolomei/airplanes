@@ -1,17 +1,25 @@
-package com.play.airplanes.pool;
+package com.play.airplanes.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.PrintWriter;
+
 public class UserSession {
 
+    //ignored from marshaling
+    @JsonIgnore
     private static final Logger logger = LoggerFactory.getLogger(UserSession.class);
+    @JsonIgnore
+    private PrintWriter userOutputStream;
 
+    //marshaled properties
     private String sessionId;
     private String userName;
     private boolean isLoggedIn = false;
 
-    UserSession(String sessionId) throws Exception {
+    public UserSession(String sessionId) throws Exception {
         if (null == sessionId)
             throw new Exception("Cannot create new session without session id");
 
@@ -41,5 +49,13 @@ public class UserSession {
 
     public void setLoggedIn(boolean loggedIn) {
         isLoggedIn = loggedIn;
+    }
+
+    public PrintWriter getUserOutputStream() {
+        return userOutputStream;
+    }
+
+    public void setUserOutputStream(PrintWriter userOutputStream) {
+        this.userOutputStream = userOutputStream;
     }
 }
