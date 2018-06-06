@@ -17,7 +17,7 @@ public class UserSession {
     //marshaled properties
     private String sessionId;
     private String userName;
-    private boolean isLoggedIn = false;
+    private boolean isLoggedIn;
 
     public UserSession(String sessionId) throws Exception {
         if (null == sessionId)

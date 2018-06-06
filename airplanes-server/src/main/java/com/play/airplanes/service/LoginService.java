@@ -25,7 +25,7 @@ public class LoginService {
         sanitizeInput(userName);
 
         userSession.setUserName(userName);
-
+        userSession.setLoggedIn(true);
         //return to client
         ObjectMapper mapper = new ObjectMapper();
         String json = null;
@@ -45,4 +45,10 @@ public class LoginService {
         input.replaceAll("^![0-9a-zA-Z]$","");
     }
 
+    public void logoutUser(String requestBody) {
+        String clientSessionId = requestBody.substring(2);
+
+
+        airplanesGameService.removeUserFromTheGame(clientSessionId);
+    }
 }

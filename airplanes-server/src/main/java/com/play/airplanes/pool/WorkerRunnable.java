@@ -73,6 +73,11 @@ public class WorkerRunnable implements Runnable{
                 }
                 break;
             case LOGOUT:
+                try{
+                    loginService.logoutUser(requestBody);
+                }catch (IllegalArgumentException e){
+                    logger.warn("Failed to LOGOUT user");
+                }
                 break;
             case GET_PLAYERS_SUBSCRIPTION:
                 break;

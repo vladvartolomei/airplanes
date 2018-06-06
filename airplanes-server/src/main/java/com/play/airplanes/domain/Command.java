@@ -17,7 +17,7 @@ public enum Command {
     //response codes
     USER_AUTHENTICATED(5L),
     NEW_USER_ENTERED(6L),
-    NEW_GAME_ACCEPTED(7L),
+    USER_LEFT(7L),
     SET_UP_FINISHED(8L),
     NEW_HIT(9L),
     GAME_FINISHED(10L);

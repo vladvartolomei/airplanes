@@ -2,6 +2,7 @@ package com.play.airplanes.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.play.airplanes.domain.Command;
 import com.play.airplanes.domain.Game;
 import com.play.airplanes.domain.UserSession;
 import org.slf4j.Logger;
@@ -40,6 +41,25 @@ public class AirplanesGameService {
         broadcastNewPlayerJoined(userSession);
     }
 
+    public synchronized void removeUserFromTheGame(String sessionId){
+        UserSession us = null;
+        int ix = -1;
+        for (UserSession existingSession: userSessions){
+            if (sessionId.equals(existingSession.getUserName())){
+                us = existingSession;
+                ix = userSessions.indexOf(existingSession);
+            }
+        }
+
+        if (us != null){
+            userSessions.remove(ix);
+            us.setLoggedIn(false);
+
+            us.getUserOutputStream().println("LOGOUT successful");
+            broadcastPlayerLogout(us);
+        }
+    }
+
     private void broadcastNewPlayerJoined(UserSession userSession){
 
         ObjectMapper om = new ObjectMapper();
@@ -52,8 +72,23 @@ public class AirplanesGameService {
 
         for (UserSession existingSession: userSessions){
             if ( !userSession.getSessionId().equals(existingSession.getSessionId())){
-                existingSession.getUserOutputStream().println("NEW_USER_JOINED:"+userSessionJSON);
+                existingSession.getUserOutputStream().println(Command.NEW_USER_ENTERED.getValue()+":"+userSessionJSON);
             }
+        }
+    }
+
+    private void broadcastPlayerLogout(UserSession userSession){
+
+        ObjectMapper om = new ObjectMapper();
+        String userSessionJSON = null;
+        try {
+            userSessionJSON = om.writeValueAsString(userSession);
+        } catch (JsonProcessingException e) {
+            logger.warn("cannot serialize user session {}", userSession);
+        }
+
+        for (UserSession existingSession: userSessions){
+            existingSession.getUserOutputStream().println(Command.USER_LEFT.getValue()+":"+userSessionJSON);
         }
     }
 }
