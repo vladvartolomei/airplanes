@@ -2,6 +2,7 @@ package com.play.airplanes.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.play.airplanes.domain.Command;
 import com.play.airplanes.domain.UserSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class LoginService {
             throw new IllegalArgumentException("Login request must contain username");
         String userName = requestBody.substring(2);
         //sanitize input
-        userName.replaceAll("^![0-9a-zA-Z]$","");
+        sanitizeInput(userName);
 
         userSession.setUserName(userName);
 
@@ -33,11 +34,15 @@ public class LoginService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        userSession.getUserOutputStream().println(json);
-
+        userSession.getUserOutputStream().println(Command.USER_AUTHENTICATED.getValue()+":"+json);
+        logger.info("Server reply: {}",Command.USER_AUTHENTICATED.getValue()+":"+json);
         //append to players
         airplanesGameService.addNewPlayerToGame(userSession);
 
+    }
+
+    private void sanitizeInput(String input) {
+        input.replaceAll("^![0-9a-zA-Z]$","");
     }
 
 }

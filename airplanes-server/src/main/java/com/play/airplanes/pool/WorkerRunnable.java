@@ -51,7 +51,7 @@ public class WorkerRunnable implements Runnable{
      * @param requestBody
      */
     private void callCommandListener(UserSession userSession, String requestBody) {
-        if (requestBody.isEmpty())
+        if (null == requestBody || requestBody.isEmpty())
             return;
         logger.info("REQUEST->Client: {}|Request: {}", userSession.getSessionId(), requestBody);
         Command command = null;

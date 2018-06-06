@@ -91,7 +91,7 @@ public abstract class AbstractJavaFxApplicationSupport extends Application {
         ).whenComplete((ctx, throwable) -> {
             if (throwable != null) {
                 LOGGER.error("Failed to load spring application context: ", throwable);
-                Platform.runLater(() -> showErrorAlert(throwable));
+                Platform.runLater(() -> AlertService.showErrorAlertAndExit(throwable));
             } else {
                 Platform.runLater(() -> {
                     loadIcons(ctx);
@@ -210,7 +210,7 @@ public abstract class AbstractJavaFxApplicationSupport extends Application {
         }
         catch (Throwable t) {
             LOGGER.error("Failed to load application: ", t);
-            showErrorAlert(t);
+            AlertService.showErrorAlertAndExit(t);
         }
     }
 

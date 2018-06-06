@@ -6,3 +6,8 @@ javafx:
     title: AirplanesClientApplication
     stage:
         resizable: true
+
+airplanes:
+  server:
+    address: localhost
+    port: 6666

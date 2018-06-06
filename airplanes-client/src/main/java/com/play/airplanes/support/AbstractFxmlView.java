@@ -75,6 +75,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
      */
     public AbstractFxmlView() {
         LOGGER.debug("AbstractFxmlView construction");
+        Platform.setImplicitExit(false);
         // Set the root path to package path
         final String filePathFromPackageName = PropertyReaderHelper.determineFilePathFromPackageName(getClass());
         setFxmlRootPath(filePathFromPackageName);
@@ -82,6 +83,7 @@ public abstract class AbstractFxmlView implements ApplicationContextAware {
         resource = getURLResource(annotation);
         presenterProperty = new SimpleObjectProperty<>();
         bundle = getResourceBundle(getBundleName());
+
     }
 
     /**

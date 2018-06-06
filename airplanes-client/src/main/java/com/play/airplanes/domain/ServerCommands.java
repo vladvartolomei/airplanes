@@ -4,7 +4,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum Command {
+public enum ServerCommands {
 
     //request codes
     LOGIN(0L),
@@ -23,26 +23,23 @@ public enum Command {
     GAME_FINISHED(10L);
 
     private Long value;
-    private static final Map<Long,Command> lookup = new HashMap<>();
+    private static final Map<Long,ServerCommands> lookup = new HashMap<>();
 
     static {
-        for(Command s : EnumSet.allOf(Command.class))
+        for(ServerCommands s : EnumSet.allOf(ServerCommands.class))
             lookup.put(s.getValue(), s);
     }
 
-    public static Command instanceOf(Long i){
+    public static ServerCommands instanceOf(Long i){
         return lookup.get(i);
     }
 
 
-    Command(Long value) {
+    ServerCommands(Long value) {
         this.value = value;
     }
 
     public Long getValue(){
         return this.value;
     }
-
-
-
 }
